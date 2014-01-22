@@ -33,7 +33,7 @@
       }
 
       Digispark.prototype.commands = function() {
-        return ['digitalWrite'];
+        return ['digitalWrite', 'digitalRead', 'servoWrite'];
       };
 
       Digispark.prototype.connect = function(callback) {
@@ -46,6 +46,15 @@
       Digispark.prototype.digitalWrite = function(pin, value) {
         this.digispark.pinMode(pin, 0);
         return this.digispark.digitalWrite(pin, value);
+      };
+
+      Digispark.prototype.digitalRead = function(pin, callback) {
+        this.digispark.pinMode(pin, 1);
+        return this.digispark.digitalRead(pin, callback);
+      };
+
+      Digispark.prototype.servoWrite = function(pin, value) {
+        return this.digispark.servoUpdateLocation(value, value);
       };
 
       return Digispark;
