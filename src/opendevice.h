@@ -23,12 +23,11 @@ files according to the GNU General Public License (GPL) version 2 or 3.
 #ifndef __OPENDEVICE_H_INCLUDED__
 #define __OPENDEVICE_H_INCLUDED__
 
-//#if defined(LINUX)
-////#if __unix__
+#ifdef __linux__
    #include <usb.h>			// this is libusb, see http://libusb.sourceforge.net/ 
-////#else
-////   #include <lusb0_usb.h>		// this is libusb, see http://libusb.sourceforge.net/ 
-////#endif
+#else
+   #include <lusb0_usb.h>		// this is libusb, see http://libusb.sourceforge.net/ 
+#endif
 #include <stdio.h>
 
 #ifdef __cplusplus

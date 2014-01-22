@@ -29,6 +29,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 /*! \addtogroup Servo
   *  @brief Servo functions. Higher level access to PWM module.
   *  @{
@@ -54,7 +55,7 @@ void servo_updateLocation(littleWire* lwHandle,unsigned char locationChannelA,un
 
 #ifdef __cplusplus
 }
-#endif 
+#endif
 
 /*! @} */
 

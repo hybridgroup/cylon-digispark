@@ -28,12 +28,11 @@
   SOFTWARE.
 */
 
-//#if defined(LINUX)
-////#if __unix__
-   #include <usb.h>				// this is libusb, see http://libusb.sourceforge.net/
-////#else
-////   #include <lusb0_usb.h>		// this is libusb, see http://libusb.sourceforge.net/
-////#endif
+#ifdef __linux__
+   #include <usb.h>       // this is libusb, see http://libusb.sourceforge.net/
+#else
+   #include <lusb0_usb.h>   // this is libusb, see http://libusb.sourceforge.net/
+#endif
 #include "opendevice.h"			// common code moved to separate module
 #include "littleWire_util.h"
 #include <stdio.h>
@@ -560,10 +559,12 @@ void ws2812_flush(littleWire* lwHandle, unsigned char pin);
   */
 void ws2812_preload(littleWire* lwHandle, unsigned char r,unsigned char g,unsigned char b);
 
-  /*! @} */
 #ifdef __cplusplus
 }
-#endif 
+#endif
+
+  /*! @} */
+  
 
 /**
 * @mainpage Introduction
@@ -573,4 +574,3 @@ void ws2812_preload(littleWire* lwHandle, unsigned char r,unsigned char g,unsign
 */
 
 #endif
-
