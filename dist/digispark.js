@@ -33,7 +33,7 @@
       }
 
       Digispark.prototype.commands = function() {
-        return ['digitalWrite', 'digitalRead', 'servoWrite'];
+        return ['digitalWrite', 'digitalRead', 'servoWrite', 'pwmWrite'];
       };
 
       Digispark.prototype.connect = function(callback) {
@@ -54,7 +54,11 @@
       };
 
       Digispark.prototype.servoWrite = function(pin, value) {
-        return this.digispark.servoUpdateLocation(value, value);
+        return this.digispark.servoWrite(value);
+      };
+
+      Digispark.prototype.pwmWrite = function(pin, value) {
+        return this.digispark.pwmWrite(value);
       };
 
       return Digispark;

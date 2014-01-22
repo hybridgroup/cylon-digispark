@@ -21,7 +21,7 @@ namespace 'Cylon.Adaptors', ->
       @myself = this
     commands: ->
       [
-        'digitalWrite', 'digitalRead', 'servoWrite'
+        'digitalWrite', 'digitalRead', 'servoWrite', 'pwmWrite'
       ]
 
     connect: (callback) ->
@@ -39,4 +39,7 @@ namespace 'Cylon.Adaptors', ->
       @digispark.digitalRead pin, callback
 
     servoWrite: (pin, value) ->
-      @digispark.servoUpdateLocation(value, value)
+      @digispark.servoWrite value
+
+    pwmWrite: (pin, value) ->
+      @digispark.pwmWrite value
