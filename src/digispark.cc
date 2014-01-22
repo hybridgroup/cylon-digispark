@@ -1,5 +1,3 @@
-#include <string>
-#include <stdio.h>
 #include <node.h>
 #include <v8.h>
 #include "littleWire.h"
