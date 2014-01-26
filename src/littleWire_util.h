@@ -1,10 +1,10 @@
 #ifndef LITTLEWIRE_UTIL_H
 #define LITTLEWIRE_UTIL_H
 
-#ifdef __linux__
-	#include <unistd.h>
+#ifdef _WIN32
+  #include <windows.h>
 #else
-	#include <windows.h>
+  #include <unistd.h>
 #endif
 
 #ifdef __cplusplus
