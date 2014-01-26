@@ -15,7 +15,22 @@ https://github.com/hybridgroup/cylon
 
 ## Getting Started
 
-Install the module with: `npm install cylon-digispark`
+cylon-digispark requires libusb. 
+
+To install libusb on linux
+~~~
+$ sudo apt-get install libusb-dev
+~~~
+
+os x
+~~~
+$ brew install libusb
+~~~
+
+
+Then install the module with: `npm install cylon-digispark`
+
+If you're experiencing the `AttributeError: 'module' object has no attribute 'script_main'` build issue, then please refer to this [comment](https://github.com/TooTallNate/node-gyp/issues/363#issuecomment-33212812)
 
 ## Examples
 
