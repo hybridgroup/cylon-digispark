@@ -1,17 +1,14 @@
 # Cylon.js For Digispark
 
-Cylon.js (http://cylonjs.com) is a JavaScript framework for robotics and
-physical computing using Node.js
+Cylon.js (http://cylonjs.com) is a JavaScript framework for robotics and physical computing using Node.js
 
-This repository contains the Cylon adaptor for Digispark.
+This repository contains the Cylon adaptor for the [Digispark](http://www.kickstarter.com/projects/digistump/digispark-the-tiny-arduino-enabled-usb-dev-board) ATTiny-based USB development board with the [Little Wire](http://littlewire.cc/) protocol firmware installed.
 
 Want to use Ruby on robots? Check out our sister project Artoo (http://artoo.io)
 
-Want to use the Go programming language to power your robots? Check out our
-sister project Gobot (http://gobot.io).
+Want to use the Go programming language to power your robots? Check out our sister project Gobot (http://gobot.io).
 
-For more information about Cylon, check out our repo at
-https://github.com/hybridgroup/cylon
+For more information about Cylon, check out our repo at https://github.com/hybridgroup/cylon
 
 ## Getting Started
 
@@ -62,6 +59,60 @@ Cylon.robot
     every 1.second(), -> my.led.toggle()
 
 .start()
+```
+## Connecting to Digispark
+
+If your Digispark (http://www.kickstarter.com/projects/digistump/digispark-the-tiny-arduino-enabled-usb-dev-board) ATTiny-based USB development board already has the Little Wire (http://littlewire.cc/) protocol firmware installed, you can connect right away with Cylon.js. 
+
+Otherwise, for instructions on how to install Little Wire on a Digispark check out http://digistump.com/board/index.php/topic,160.0.html
+
+### OSX
+
+The main steps are:
+- Plug in the Digispark to the USB port
+- Connect to the device via Cylon.js
+
+First plug the Digispark into your computer via the USB port. Then... (directions go here)
+
+### Ubuntu
+
+The main steps are:
+- Add a udev rule to allow access to the Digispark device
+- Plug in the Digispark to the USB port
+- Connect to the device via Cylon.js
+
+First, you must add a udev rule, so that Cylon.js can communicate with the USB device. Ubuntu and other modern Linux distibutions use udev to manage device files when USB devices are added and removed. By default, udev will create a device with read-only permission which will not allow to you download code. You must place the udev rules below into a file named /etc/udev/rules.d/49-micronucleus.rules.
+
+```
+# UDEV Rules for Micronucleus boards including the Digispark.
+# This file must be placed at:
+#
+# /etc/udev/rules.d/49-micronucleus.rules    (preferred location)
+#   or
+# /lib/udev/rules.d/49-micronucleus.rules    (req'd on some broken systems)
+#
+# After this file is copied, physically unplug and reconnect the board.
+#
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1781", ATTRS{idProduct}=="0c9f", MODE:="0666"
+KERNEL=="ttyACM*", ATTRS{idVendor}=="1781", ATTRS{idProduct}=="0c9f", MODE:="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="16d0", ATTRS{idProduct}=="0753", MODE:="0666"
+KERNEL=="ttyACM*", ATTRS{idVendor}=="16d0", ATTRS{idProduct}=="0753", MODE:="0666", ENV{ID_MM_DEVICE_IGNORE}="1"
+#
+# If you share your linux system with other users, or just don't like the
+# idea of write permission for everybody, you can replace MODE:="0666" with
+# OWNER:="yourusername" to create the device owned by you, or with
+# GROUP:="somegroupname" and mange access using standard unix groups.
+```
+
+Thanks to [@bluebie](https://github.com/Bluebie) for these instructions! (https://github.com/Bluebie/micronucleus-t85/wiki/Ubuntu-Linux)
+
+Now plug the Digispark into your computer via the USB port.
+
+Once plugged in, use the `cylon connect scan` command with the  `-t usb` option to verify your connection info:
+
+```
+$ cylon connecct scan -t usb
 ```
 
 ## Documentation
