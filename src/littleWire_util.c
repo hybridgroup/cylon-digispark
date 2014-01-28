@@ -4,9 +4,9 @@
 /* Delay in miliseconds */
 void delay(unsigned int duration)
 {
-	#ifdef LINUX
-		usleep(duration*1000);
-	#else
+	#ifdef _WIN32
 		Sleep(duration);
+	#else
+		usleep(duration*1000);
 	#endif
 }
