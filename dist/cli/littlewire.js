@@ -20,7 +20,7 @@
               return ChildProcess.spawn(uploadCmd, []);
             }, 5000);
           } else {
-
+            ChildProcess.spawn(uploadCmd, []);
           }
           break;
         case 'darwin':

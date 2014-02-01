@@ -50,14 +50,17 @@
             subcmd = args[0];
             switch (subcmd) {
               case 'upload':
-                return CliCommands.littlewire.upload();
-              case 'setUdevRules':
-                return CliCommands.littlewire.setUdevRules();
+                CliCommands.littlewire.upload();
+                break;
+              case 'set-udev-rules':
+                CliCommands.littlewire.setUdevRules();
+                break;
               default:
                 console.log("cylon littlewire argument not recognized, try:\n");
                 console.log("1.- cylon littlewire upload (make sure NOT to connect the digispark until prompted).");
-                return console.log("2.- cylon littlewire setUdevRules\n");
+                console.log("2.- cylon littlewire set-udev-rules\n");
             }
+            return true;
           }
         }
       };

@@ -37,9 +37,11 @@ module.exports =
         switch(subcmd)
           when 'upload'
             CliCommands.littlewire.upload()
-          when 'setUdevRules'
+          when 'set-udev-rules'
             CliCommands.littlewire.setUdevRules()
           else
             console.log("cylon littlewire argument not recognized, try:\n")
             console.log("1.- cylon littlewire upload (make sure NOT to connect the digispark until prompted).")
-            console.log("2.- cylon littlewire setUdevRules\n")
+            console.log("2.- cylon littlewire set-udev-rules\n")
+
+        true
