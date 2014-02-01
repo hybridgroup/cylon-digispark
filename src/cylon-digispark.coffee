@@ -12,6 +12,7 @@ namespace = require 'node-namespace'
 
 require 'cylon'
 require './digispark'
+CliCommands = require "./cli/commands"
 
 GPIO = require "cylon-gpio"
 
@@ -26,3 +27,21 @@ module.exports =
     robot.registerAdaptor 'cylon-digispark', 'digispark'
 
     GPIO.register robot
+
+  registerCommands: ->
+    littlewire:
+      description: "Upload littlewire protocol to digispark"
+      command: () ->
+        subcmd = args[0]
+
+        switch(subcmd)
+          when 'upload'
+            CliCommands.littlewire.upload()
+          when 'set-udev-rules'
+            CliCommands.littlewire.setUdevRules()
+          else
+            console.log("cylon littlewire argument not recognized, try:\n")
+            console.log("1.- cylon littlewire upload (make sure NOT to connect the digispark until prompted).")
+            console.log("2.- cylon littlewire set-udev-rules\n")
+
+        true

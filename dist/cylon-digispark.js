@@ -9,7 +9,7 @@
 
 (function() {
   'use strict';
-  var GPIO, namespace,
+  var CliCommands, GPIO, namespace,
     __slice = [].slice;
 
   namespace = require('node-namespace');
@@ -17,6 +17,8 @@
   require('cylon');
 
   require('./digispark');
+
+  CliCommands = require("./cli/commands");
 
   GPIO = require("cylon-gpio");
 
@@ -38,6 +40,30 @@
     register: function(robot) {
       robot.registerAdaptor('cylon-digispark', 'digispark');
       return GPIO.register(robot);
+    },
+    registerCommands: function() {
+      return {
+        littlewire: {
+          description: "Upload littlewire protocol to digispark",
+          command: function() {
+            var subcmd;
+            subcmd = args[0];
+            switch (subcmd) {
+              case 'upload':
+                CliCommands.littlewire.upload();
+                break;
+              case 'set-udev-rules':
+                CliCommands.littlewire.setUdevRules();
+                break;
+              default:
+                console.log("cylon littlewire argument not recognized, try:\n");
+                console.log("1.- cylon littlewire upload (make sure NOT to connect the digispark until prompted).");
+                console.log("2.- cylon littlewire set-udev-rules\n");
+            }
+            return true;
+          }
+        }
+      };
     }
   };
 
