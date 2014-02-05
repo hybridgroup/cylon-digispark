@@ -45,7 +45,7 @@
       return {
         littlewire: {
           description: "Upload littlewire protocol to digispark",
-          command: function() {
+          command: function(args) {
             var subcmd;
             subcmd = args[0];
             switch (subcmd) {
