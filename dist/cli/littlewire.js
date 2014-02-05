@@ -1,7 +1,7 @@
 (function() {
-  var ChildProcess, fs, littlewire, os, path;
+  var fs, littlewire, os, path;
 
-  ChildProcess = require('./child_process');
+  require("cylon");
 
   os = require('os');
 
@@ -11,20 +11,21 @@
 
   littlewire = {
     upload: function() {
-      var uploadCmd;
+      var cylonProcess, uploadCmd;
+      cylonProcess = new Cylon.Process;
       switch (os.platform()) {
         case 'linux':
           uploadCmd = path.join("" + __dirname, "../../src/cli/deps/littlewireLoader_v13");
           if (this._copyUdev()) {
             setTimeout(function() {
-              return ChildProcess.spawn(uploadCmd, []);
+              return cylonProcess.spawn(uploadCmd, []);
             }, 5000);
           } else {
-            ChildProcess.spawn(uploadCmd, []);
+            cylonProcess.spawn(uploadCmd, []);
           }
           break;
         case 'darwin':
-          ChildProcess.spawn(uploadCmd, []);
+          cylonProcess.spawn(uploadCmd, []);
           break;
         default:
           console.log('OS not yet supported...\n');
@@ -36,14 +37,15 @@
       return true;
     },
     _copyUdev: function(force) {
-      var udevBkpPath, udevSysPath;
+      var cylonProcess, udevBkpPath, udevSysPath;
       if (force == null) {
         force = false;
       }
       udevSysPath = '/etc/udev/rules.d/49-micronucleus.rules';
       udevBkpPath = path.join("" + __dirname, "../../src/cli/deps/49-micronucleus.rules");
       if (!fs.existsSync(udevSysPath) || force) {
-        ChildProcess.spawn('sudo', ['cp', udevBkpPath, udevSysPath]);
+        cylonProcess = new Cylon.Process;
+        cylonProcess.spawn('sudo', ['cp', udevBkpPath, udevSysPath]);
         return true;
       } else {
         return false;

@@ -31,7 +31,7 @@ module.exports =
   registerCommands: ->
     littlewire:
       description: "Upload littlewire protocol to digispark"
-      command: () ->
+      command: (args) ->
         subcmd = args[0]
 
         switch(subcmd)
