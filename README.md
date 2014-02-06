@@ -110,6 +110,7 @@ That is it, you are set to start running Cylon digispark examples.
 ### Ubuntu
 
 The main steps are:
+- Install the cylon-digispark npm module
 - Add a udev rule to allow access to the Digispark device (Do not worry
   about this, the `cylon littlewire upload` command does it for you if none is detected)
 - Plug in the Digispark to the USB port
@@ -128,7 +129,7 @@ upload littlewire to the digispark, plug it to a USB port when
 prompted. You might be asked to enter your sudo password, since
 uploading littlewire to the digispark requires some new udev rules, you
 can check and review them in /etc/udev/rules.d/49-micronucleus.rules
-after running the `cylon littlewire upload` command):
+after running the `cylon littlewire upload` command:
 
 ```
 $ cylon littlewire upload
