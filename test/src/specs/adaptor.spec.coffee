@@ -1,8 +1,8 @@
 'use strict'
 
-adaptor = source("adaptor")
+adaptor = source("digispark")
 
 describe "Cylon.Adaptors.Digispark", ->
-  module = new Cylon.Adaptors.Digispark
+  digispark = new Cylon.Adaptors.Digispark
 
   it "needs tests"

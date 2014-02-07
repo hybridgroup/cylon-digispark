@@ -2,11 +2,11 @@
   'use strict';
   var adaptor;
 
-  adaptor = source("adaptor");
+  adaptor = source("digispark");
 
   describe("Cylon.Adaptors.Digispark", function() {
-    var module;
-    module = new Cylon.Adaptors.Digispark;
+    var digispark;
+    digispark = new Cylon.Adaptors.Digispark;
     return it("needs tests");
   });
 
