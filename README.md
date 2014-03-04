@@ -172,6 +172,8 @@ Thank you!
 
 ## Release History
 
+Version 0.2.0 - Update to cylon 0.11.0, migrated to pure JS
+
 Version 0.1.0 - Initial release
 
 ## License
