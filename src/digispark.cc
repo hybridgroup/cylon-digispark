@@ -22,6 +22,9 @@ class Digispark : public node::ObjectWrap {
     littleWire* lw_;
     bool servo;
     bool pwm;
+    unsigned char ch0;
+    unsigned char ch1;
+    unsigned char ch2;
 };
 
 Persistent<Function> Digispark::constructor;
@@ -36,7 +39,7 @@ void Digispark::Init(Handle<Object> exports) {
   // Prepare constructor template
   Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
   tpl->SetClassName(String::NewSymbol("Digispark"));
-  tpl->InstanceTemplate()->SetInternalFieldCount(3);
+  tpl->InstanceTemplate()->SetInternalFieldCount(6);
   // Prototype
   tpl->PrototypeTemplate()->Set(String::NewSymbol("firmwareVersion"),FunctionTemplate::New(FirmwareVersion)->GetFunction());
   tpl->PrototypeTemplate()->Set(String::NewSymbol("pinMode"),FunctionTemplate::New(PinMode)->GetFunction());
@@ -53,7 +56,10 @@ Handle<Value> Digispark::New(const Arguments& args) {
   Digispark* obj = new Digispark(littleWire_connect());
   obj->Wrap(args.This());
   obj->servo = false;
-  obj->servo = false;
+  obj->pwm = false;
+  obj->ch0 = 0;
+  obj->ch1 = 0;
+  obj->ch2 = 0;
   return args.This();
 }
 
@@ -108,12 +114,23 @@ Handle<Value> Digispark::PWMWrite(const Arguments& args) {
   HandleScope scope;
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
   if (obj->pwm == false) {
-    pwm_init(obj->lw_);
-    pwm_updatePrescaler(obj->lw_,1); 
+    softPWM_state(obj->lw_, ENABLE);
     obj->pwm = true;
   }
-  unsigned char val = char(Number::New(args[0]->NumberValue())->Value());
-  pwm_updateCompare(obj->lw_, val, val);
+  unsigned char pin = char(Number::New(args[0]->NumberValue())->Value());
+  unsigned char val = char(Number::New(args[1]->NumberValue())->Value());
+  switch(pin) {
+    case 0:
+      obj->ch0 = val;
+      break;
+    case 1:
+      obj->ch1 = val;
+      break;
+    case 2:
+      obj->ch2 = val;
+    break;
+  }
+  softPWM_write(obj->lw_, obj->ch0, obj->ch1, obj->ch2);
   return scope.Close(Boolean::New(true));
 }
 
