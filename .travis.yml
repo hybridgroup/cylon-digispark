@@ -1,4 +1,12 @@
 language: node_js
-script: "make"
 node_js:
   - '0.10'
+
+before-install:
+  - apt-get install libusb-dev
+
+install:
+  - npm install
+
+script:
+  - make test
