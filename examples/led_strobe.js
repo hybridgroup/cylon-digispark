@@ -14,7 +14,7 @@ Cylon.robot({
         index = 0,
         keys = Object.keys(my.devices);
 
-    every((0.2).seconds(), function(){
+    every((0.05).seconds(), function(){
       brightness += fade;
 
       console.log('brightness =>', brightness);
