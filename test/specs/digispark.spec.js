@@ -16,7 +16,7 @@ describe("Digispark", function() {
   });
 
   describe("#commands", function() {
-    var commands = spark.commands();
+    var commands = spark.commands;
 
     it("returns an array of string commands", function() {
       expect(commands).to.be.an('array');
@@ -49,7 +49,7 @@ describe("Digispark", function() {
     });
 
     it('proxies methods from the digispark to the adaptor', function() {
-      var methods = spark.commands();
+      var methods = spark.commands;
 
       expect(spark.proxyMethods).to.be.calledWith(methods, spark.digispark, spark);
     });
