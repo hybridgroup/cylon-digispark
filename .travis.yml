@@ -5,7 +5,7 @@ node_js:
 compiler: clang
 
 before_install:
-  - apt-get install libusb-dev
+  - sudo apt-get -y install libusb-dev
 
 install:
   - npm install
