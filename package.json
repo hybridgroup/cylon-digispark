@@ -1,6 +1,6 @@
 {
   "name": "cylon-digispark",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "main": "lib/cylon-digispark.js",
   "description": "Cylon module for Digispark",
   "homepage": "http://cylonjs.com",
@@ -21,6 +21,11 @@
     "mocha":      "~1.12.1",
     "sinon":      "~1.7.3",
     "jshint":     "~2.4.4"
+  },
+
+  "peerDependencies": {
+    "cylon":      ">= 0.15.0 < 1",
+    "cylon-gpio": ">= 0.15.0 < 1"
   },
 
   "dependencies": {
