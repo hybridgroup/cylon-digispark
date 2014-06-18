@@ -110,11 +110,11 @@ describe("Digispark", function() {
       digispark = { servoWrite: spy() };
       callback = spy();
       spark.digispark = digispark;
-      spark.servoWrite('A', 120);
+      spark.servoWrite('A', 1);
     });
 
     it("writes the value to the pin", function() {
-      expect(digispark.servoWrite).to.be.calledWith(120);
+      expect(digispark.servoWrite).to.be.calledWith(180);
     });
   });
 
@@ -130,7 +130,7 @@ describe("Digispark", function() {
     });
 
     it("writes the value to the pin", function() {
-      expect(mockSpark.pwmWrite).to.be.calledWith('A', 1);
+      expect(mockSpark.pwmWrite).to.be.calledWith('A', 255);
     });
   });
 });
