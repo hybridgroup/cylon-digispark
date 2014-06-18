@@ -34,9 +34,7 @@ Now you can install the module with: `npm install cylon-digispark`
 
 If you're experiencing the `AttributeError: 'module' object has no attribute 'script_main'` build issue, then please refer to this [comment](https://github.com/TooTallNate/node-gyp/issues/363#issuecomment-33212812)
 
-## Examples
-
-### JavaScript
+## Example
 
 ```javascript
 var Cylon = require('cylon');
@@ -51,20 +49,6 @@ Cylon.robot({
 }).start();
 ```
 
-### CoffeeScript
-
-```coffeescript
-Cylon = require 'cylon'
-
-Cylon.robot
-  connection: { name: 'digispark', adaptor: 'digispark'}
-  device: { name: 'led', driver: 'led', pin: 2 }
-
-  work: (my) ->
-    every 1.second(), -> my.led.toggle()
-
-.start()
-```
 ## Connecting to Digispark
 
 Connecting to the Digispark (http://www.kickstarter.com/projects/digistump/digispark-the-tiny-arduino-enabled-usb-dev-board)
