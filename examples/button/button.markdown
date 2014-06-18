@@ -1,9 +1,9 @@
 # Button
 
-For this example, we're going to be connecting to an Arduino, and when a putton
-on it's pressed, an LED will be toggled.
+For this example, we're going to be connecting to a digispark, and when a button
+on one of its pins is pressed, a LED will be toggled.
 
-Before you start this example, make sure you've got the `cylon-firmata` module
+Before you start this example, make sure you've got the `cylon-digispark` module
 installed.
 
 We'll get started by importing the Cylon module:
@@ -14,25 +14,38 @@ Now that we have Cylon imported, let's start making our robot:
 
     Cylon.robot({
 
-Our robot will have a connection to an Arduino, and communicate with it via the
-Firmata protocol:
+Our robot will have a connection to a digispark, and communicate with it via the
+littlewire protocol, we also include an `interval` param to specify how
+often we want to read the inputs, in this case every 0.1 seconds:
 
-      connection: { name: 'arduino', adaptor: 'firmata', port: '/dev/ttyACM0' },
+      connection: { name: 'digispark', adaptor: 'digispark', interval: 0.1 },
 
-This time, our robot will have two devices, an LED and a button:
+Our robot will have two devices, an LED and a button:
 
       devices: [
-        { name: 'led', driver: 'led', pin: 13 },
-        { name: 'button', driver: 'button', pin: 2 }
+        { name: 'led', driver: 'led', pin: 0 },
+        { name: 'button', driver: 'button', pin: 5 }
       ],
 
 Our robot has very simple work, it will just toggle the LED whenever the button
-sends the 'push' event:
+sends the 'push' event, we also log the press and release event, release is
+triggered when the button registers a Low voltage (0), press is
+triggered when the button registers a High voltage (1), and push is
+triggered when both events have been triggered (similar to a click event in the browser):
 
       work: function(my) {
-        my.button.on('push', my.led.toggle);
+        my.button.on('press', function() {
+          console.log('press:');
+        });
+
+        my.button.on('release', function() {
+          console.log('release: ');
+        });
+
+        my.button.on('push', function() {
+          console.log('push: ', my.button.isPressed());
+          my.led.toggle();
+        });
       }
-
 And with all that done, we can start our robot:
-
     }).start();
