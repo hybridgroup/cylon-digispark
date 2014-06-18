@@ -33,7 +33,7 @@ describe("cylon-digispark", function() {
 
   describe("#adaptor", function() {
     it("returns a new instance of the Digispark adaptor", function() {
-      expect(module.adaptor({})).to.be.an.instanceOf(Digispark);
+      expect(module.adaptor({ extraParams: {} })).to.be.an.instanceOf(Digispark);
     });
   });
 });
