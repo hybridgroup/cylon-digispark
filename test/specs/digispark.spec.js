@@ -6,7 +6,8 @@ var digispark = source('../build/Release/digispark.node');
 
 describe("Digispark", function() {
   var spark = new Digispark({
-    connection: { emit: spy() }
+    connection: { emit: spy() },
+    extraParams: {}
   });
 
   describe("constructor", function() {
@@ -74,7 +75,16 @@ describe("Digispark", function() {
   });
 
   describe("#digitalRead", function() {
-    var digispark, callback;
+    var digispark, callback,
+        clock;
+
+    beforeEach(function() {
+      clock = sinon.useFakeTimers();
+    });
+
+    afterEach(function() {
+      clock.restore();
+    });
 
     beforeEach(function() {
       digispark = { pinMode: spy(), digitalRead: spy() };
@@ -88,6 +98,7 @@ describe("Digispark", function() {
     });
 
     it("reads the value from the pin", function() {
+      clock.tick(2050);
       expect(digispark.digitalRead).to.be.calledWith('A', callback);
     });
   });
