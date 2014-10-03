@@ -10,6 +10,8 @@ Want to use the Go programming language to power your robots? Check out our sist
 
 For more information about Cylon, check out our repo at https://github.com/hybridgroup/cylon
 
+[![Build Status](https://secure.travis-ci.org/hybridgroup/cylon-digispark.png?branch=master)](http://travis-ci.org/hybridgroup/cylon-digispark) [![Code Climate](https://codeclimate.com/github/hybridgroup/cylon-digispark/badges/gpa.svg)](https://codeclimate.com/github/hybridgroup/cylon-digispark) [![Test Coverage](https://codeclimate.com/github/hybridgroup/cylon-digispark/badges/coverage.svg)](https://codeclimate.com/github/hybridgroup/cylon-digispark)
+
 ## Getting Started
 
 Installing the cylon-digispark requires the `libusb` package already be installed.
