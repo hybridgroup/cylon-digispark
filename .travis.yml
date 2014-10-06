@@ -1,12 +1,9 @@
 language: node_js
-node_js:
-  - '0.10'
-
-before_install:
-  - sudo apt-get -y install libusb-dev
-
+node_js: '0.10'
 install:
+  - sudo apt-get -y install libusb-dev
   - npm install
-
+  - npm install -g istanbul codeclimate-test-reporter
 script:
-  - make test
+  - make cover
+  - CODECLIMATE_REPO_TOKEN=9d391fbc1ab0b8c4812831989c359d9c24d19947865aa82b1a9dc2303d9681e9 codeclimate < coverage/lcov.info
