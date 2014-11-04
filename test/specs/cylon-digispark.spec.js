@@ -3,31 +3,16 @@
 var module = source('cylon-digispark'),
     Digispark = source('digispark');
 
-var GPIO = require('cylon-gpio');
-
 describe("cylon-digispark", function() {
-  describe("#register", function() {
-    var robot;
-
-    beforeEach(function() {
-      robot = { registerAdaptor: spy() };
-      stub(GPIO, 'register');
-      module.register(robot);
+  describe("#adaptors", function() {
+    it('is an array of supplied adaptors', function() {
+      expect(module.adaptors).to.be.eql(['digispark']);
     });
+  });
 
-    afterEach(function() {
-      GPIO.register.restore();
-    });
-
-    it("registers the 'digispark' adaptor with the robot", function() {
-      expect(robot.registerAdaptor).to.be.calledWith(
-        'cylon-digispark',
-        'digispark'
-      );
-    });
-
-    it("registers GPIO with the robot", function() {
-      expect(GPIO.register).to.be.calledWith(robot);
+  describe("#dependencies", function() {
+    it('is an array of supplied dependencies', function() {
+      expect(module.dependencies).to.be.eql(['cylon-gpio']);
     });
   });
 
