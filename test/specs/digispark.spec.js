@@ -6,8 +6,7 @@ var digispark = source('../build/Release/digispark.node');
 
 describe("Digispark", function() {
   var spark = new Digispark({
-    connection: { emit: spy() },
-    extraParams: {}
+    connection: { emit: spy() }
   });
 
   describe("constructor", function() {
