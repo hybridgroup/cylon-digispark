@@ -3,6 +3,7 @@ node_js: '0.10'
 install:
   - sudo apt-get -y install libusb-dev
   - npm install
+  - npm install git://github.com/hybridgroup/cylon.git
   - npm install -g istanbul codeclimate-test-reporter
 script:
   - make cover
