@@ -2,11 +2,12 @@ var Cylon = require('cylon');
 
 Cylon.robot({
   connection: { name: 'digispark', adaptor: 'digispark' },
-  devices: [
-    { name: 'red', driver: 'led', pin: 0 },
-    { name: 'green', driver: 'led', pin: 1 },
-    { name: 'blue', driver: 'led', pin: 2 }
-  ],
+
+  devices: {
+    red: { driver: 'led', pin: 0 },
+    green: { driver: 'led', pin: 1 },
+    blue: { driver: 'led', pin: 2 }
+  },
 
   work: function(my){
     var brightness = 0,

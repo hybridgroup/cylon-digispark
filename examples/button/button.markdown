@@ -22,10 +22,10 @@ often we want to read the inputs, in this case every 0.1 seconds:
 
 Our robot will have two devices, an LED and a button:
 
-      devices: [
-        { name: 'led', driver: 'led', pin: 0 },
-        { name: 'button', driver: 'button', pin: 5 }
-      ],
+      devices: {
+        led: { driver: 'led', pin: 0 },
+        button: { driver: 'button', pin: 5 }
+      },
 
 Our robot has very simple work, it will just toggle the LED whenever the button
 sends the 'push' event, we also log the press and release event, release is
