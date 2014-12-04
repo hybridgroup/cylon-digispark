@@ -18,7 +18,9 @@ Our robot will have a connection to a digispark, and communicate with it via the
 littlewire protocol, we also include an `interval` param to specify how
 often we want to read the inputs, in this case every 0.1 seconds:
 
-      connection: { name: 'digispark', adaptor: 'digispark', interval: 0.1 },
+      connections: {
+        digispark: { adaptor: 'digispark', interval: 0.1 }
+      },
 
 Our robot will have two devices, an LED and a button:
 
@@ -47,5 +49,7 @@ triggered when both events have been triggered (similar to a click event in the 
           my.led.toggle();
         });
       }
+
 And with all that done, we can start our robot:
+
     }).start();
