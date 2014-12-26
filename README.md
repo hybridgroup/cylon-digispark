@@ -78,11 +78,11 @@ Install the cylon-digispark module:
 
 After installing the cylon-digispark npm module run the following command to upload littlewire to the digispark, plug it to a USB port when prompted:
 
-    $ cylon littlewire upload
+    $ gort digispark upload
 
 Once plugged in, use the `cylon scan usb` command to verify your connection info:
 
-    $ cylon scan usb
+    $ gort scan usb
 
 Now use the `ID` info returned to find the `product` and `vendor` ID's required to establish a connection with the Digispark in your Cylon code.
 
@@ -96,13 +96,13 @@ Install the cylon-digispark npm module:
 
     $ npm install cylon-digispark
 
-After installing the cylon-digispark module run the following command to upload littlewire to the digispark, plug it to a USB port when prompted. You might be asked to enter your sudo password, since uploading littlewire to the digispark requires some new udev rules, you can check and review them in /etc/udev/rules.d/49-micronucleus.rules after running the `cylon littlewire upload` command:
+After installing the cylon-digispark module run the following command to upload littlewire to the digispark, plug it to a USB port when prompted. You might be asked to enter your sudo password, since uploading littlewire to the digispark requires some new udev rules, you can check and review them in /etc/udev/rules.d/49-micronucleus.rules after running the `gort digispark set-udev-rules` command:
 
-    $ cylon littlewire upload
+    $ gort digispark upload
 
 Once plugged in, use the `cylon scan usb` command to verify your connection info:
 
-    $ cylon scan usb
+    $ gort scan usb
 
 Now use the `ID` info returned to find the `product` and `vendor` ID's required to establish a connection with the Digispark in your cylon code.
 
