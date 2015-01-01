@@ -1,8 +1,10 @@
-var Cylon = require('cylon');
+"use strict";
+
+var Cylon = require("cylon");
 
 Cylon.robot({
   connections: {
-    digispark: { adaptor: 'digispark' }
+    digispark: { adaptor: "digispark" }
   },
 
   // when declaring the servo driver you can add an optional `angleLimits` param
@@ -10,7 +12,7 @@ Cylon.robot({
   // so sot he servo can't be damaged if it cannot move in the full 0-180
   // range, most servos are not capable of this.
   devices: {
-    servo: { driver: 'servo', pin: 0, limits: { bottom: 20, top: 160 } }
+    servo: { driver: "servo", pin: 0, limits: { bottom: 20, top: 160 } }
   },
 
   work: function(my) {

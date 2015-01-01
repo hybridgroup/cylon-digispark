@@ -1,14 +1,16 @@
-var Cylon = require('cylon');
+"use strict";
+
+var Cylon = require("cylon");
 
 Cylon.robot({
   connections: {
-    digispark: { adaptor: 'digispark' }
+    digispark: { adaptor: "digispark" }
   },
 
   devices: {
-    red: { driver: 'led', pin: 0 },
-    green: { driver: 'led', pin: 1 },
-    blue: { driver: 'led', pin: 2 }
+    red: { driver: "led", pin: 0 },
+    green: { driver: "led", pin: 1 },
+    blue: { driver: "led", pin: 2 }
   },
 
   work: function(my) {
@@ -20,8 +22,8 @@ Cylon.robot({
     every((0.05).seconds(), function() {
       brightness += fade;
 
-      console.log('brightness =>', brightness);
-      console.log('index =>', index);
+      console.log("brightness =>", brightness);
+      console.log("index =>", index);
       my[keys[index]].brightness(brightness);
 
       if ((brightness === 0) || (brightness === 255)) {

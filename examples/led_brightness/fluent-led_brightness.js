@@ -1,11 +1,13 @@
-var Cylon = require('cylon');
+"use strict";
+
+var Cylon = require("cylon");
 
 Cylon
   .robot()
-  .connection('digispark', { adaptor: 'digispark' })
-  .device('led', { driver: 'led', pin: 0 })
+  .connection("digispark", { adaptor: "digispark" })
+  .device("led", { driver: "led", pin: 0 })
 
-  .on('ready', function(bot) {
+  .on("ready", function(bot) {
     var brightness = 0,
         fade = 5;
 
