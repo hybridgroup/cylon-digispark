@@ -107,7 +107,9 @@ describe("Digispark", function() {
     });
 
     it("calls #respond method", function() {
-      expect(spark.respond).to.be.calledWith("digitalRead", callback, null, 1, "A");
+      expect(spark.respond)
+        .to.be
+        .calledWith("digitalRead", callback, null, 1, "A");
     });
 
     it("triggers the callback", function() {
