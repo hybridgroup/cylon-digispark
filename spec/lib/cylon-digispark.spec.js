@@ -1,6 +1,6 @@
 "use strict";
 
-var mod = lib("cylon-digispark"),
+var mod = lib("../"),
     Digispark = lib("digispark");
 
 describe("cylon-digispark", function() {

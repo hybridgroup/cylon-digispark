@@ -1,7 +1,6 @@
 {
   "name": "cylon-digispark",
   "version": "0.12.0",
-  "main": "lib/cylon-digispark.js",
   "description": "Cylon module for Digispark",
   "homepage": "http://cylonjs.com",
   "bugs": "https://github.com/hybridgroup/cylon-digispark/issues",
