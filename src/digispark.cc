@@ -1,4 +1,5 @@
 #include <node.h>
+#include <nan.h>
 #include <v8.h>
 #include "littleWire.h"
 #include "littleWire_servo.h"
@@ -11,13 +12,13 @@ class Digispark : public node::ObjectWrap {
   private:
     explicit Digispark(littleWire* lw);
     ~Digispark();
-    static v8::Handle<v8::Value> New(const v8::Arguments& args);
-    static v8::Handle<v8::Value> FirmwareVersion(const v8::Arguments& args);
-    static v8::Handle<v8::Value> DigitalWrite(const v8::Arguments& args);
-    static v8::Handle<v8::Value> DigitalRead(const v8::Arguments& args);
-    static v8::Handle<v8::Value> ServoWrite(const v8::Arguments& args);
-    static v8::Handle<v8::Value> PWMWrite(const v8::Arguments& args);
-    static v8::Handle<v8::Value> PinMode(const v8::Arguments& args);
+    static NAN_METHOD(New);
+    static NAN_METHOD(FirmwareVersion);
+    static NAN_METHOD(DigitalWrite);
+    static NAN_METHOD(DigitalRead);
+    static NAN_METHOD(ServoWrite);
+    static NAN_METHOD(PWMWrite);
+    static NAN_METHOD(PinMode);
     static v8::Persistent<v8::Function> constructor;
     littleWire* lw_;
     bool servo;
@@ -37,22 +38,25 @@ Digispark::~Digispark() {
 
 void Digispark::Init(Handle<Object> exports) {
   // Prepare constructor template
-  Local<FunctionTemplate> tpl = FunctionTemplate::New(New);
-  tpl->SetClassName(String::NewSymbol("Digispark"));
+  Local<FunctionTemplate> tpl = NanNew<FunctionTemplate>(New);
+
+  tpl->SetClassName(NanNew("Digispark"));
   tpl->InstanceTemplate()->SetInternalFieldCount(6);
+
   // Prototype
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("firmwareVersion"),FunctionTemplate::New(FirmwareVersion)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("pinMode"),FunctionTemplate::New(PinMode)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("digitalWrite"),FunctionTemplate::New(DigitalWrite)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("digitalRead"),FunctionTemplate::New(DigitalRead)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("servoWrite"),FunctionTemplate::New(ServoWrite)->GetFunction());
-  tpl->PrototypeTemplate()->Set(String::NewSymbol("pwmWrite"),FunctionTemplate::New(PWMWrite)->GetFunction());
-  constructor = Persistent<Function>::New(tpl->GetFunction());
-  exports->Set(String::NewSymbol("Digispark"), constructor);
+  tpl->PrototypeTemplate()->Set(NanNew("firmwareVersion"),NanNew<FunctionTemplate>(FirmwareVersion)->GetFunction());
+  tpl->PrototypeTemplate()->Set(NanNew("pinMode"),NanNew<FunctionTemplate>(PinMode)->GetFunction());
+  tpl->PrototypeTemplate()->Set(NanNew("digitalWrite"),NanNew<FunctionTemplate>(DigitalWrite)->GetFunction());
+  tpl->PrototypeTemplate()->Set(NanNew("digitalRead"),NanNew<FunctionTemplate>(DigitalRead)->GetFunction());
+  tpl->PrototypeTemplate()->Set(NanNew("servoWrite"),NanNew<FunctionTemplate>(ServoWrite)->GetFunction());
+  tpl->PrototypeTemplate()->Set(NanNew("pwmWrite"),NanNew<FunctionTemplate>(PWMWrite)->GetFunction());
+
+  NanAssignPersistent<Function>(constructor, tpl->GetFunction());
+  exports->Set(NanNew<String>("Digispark"), tpl->GetFunction());
 }
 
-Handle<Value> Digispark::New(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Digispark::New) {
+  NanScope();
   Digispark* obj = new Digispark(littleWire_connect());
   obj->Wrap(args.This());
   obj->servo = false;
@@ -60,65 +64,65 @@ Handle<Value> Digispark::New(const Arguments& args) {
   obj->ch0 = 0;
   obj->ch1 = 0;
   obj->ch2 = 0;
-  return args.This();
+  NanReturnValue(args.This());
 }
 
-Handle<Value> Digispark::FirmwareVersion(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Digispark::FirmwareVersion) {
+  NanScope();
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
-  return scope.Close(Number::New(readFirmwareVersion(obj->lw_)));
+  NanReturnValue(NanNew<Number>(readFirmwareVersion(obj->lw_)));
 }
 
-Handle<Value> Digispark::DigitalWrite(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Digispark::DigitalWrite) {
+  NanScope();
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
-  unsigned char p = char(Number::New(args[0]->NumberValue())->Value());
-  unsigned char v = char(Number::New(args[1]->NumberValue())->Value());
+  unsigned char p = char(NanNew<Number>(args[0]->NumberValue())->Value());
+  unsigned char v = char(NanNew<Number>(args[1]->NumberValue())->Value());
   digitalWrite(obj->lw_, p, v);
-  return scope.Close(Boolean::New(true));
+  NanReturnValue(NanNew<Boolean>(true));
 }
 
-Handle<Value> Digispark::DigitalRead(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Digispark::DigitalRead) {
+  NanScope();
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
-  unsigned char p = char(Number::New(args[0]->NumberValue())->Value());
+  unsigned char p = char(NanNew<Number>(args[0]->NumberValue())->Value());
   Local<Function> cb = Local<Function>::Cast(args[1]);
   const unsigned argc = 1;
-  Local<Value> argv[argc] = { Local<Value>::New(Number::New(digitalRead(obj->lw_, p))) };
-  cb->Call(Context::GetCurrent()->Global(), argc, argv);
-  return scope.Close(Undefined());
+  Local<Value> argv[argc] = { NanNew(NanNew<Number>(digitalRead(obj->lw_, p))) };
+  cb->Call(NanGetCurrentContext()->Global(), argc, argv);
+  NanReturnUndefined();
 }
 
-Handle<Value> Digispark::PinMode(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Digispark::PinMode) {
+  NanScope();
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
-  unsigned char p = char(Number::New(args[0]->NumberValue())->Value());
-  unsigned char v = char(Number::New(args[1]->NumberValue())->Value());
+  unsigned char p = char(NanNew<Number>(args[0]->NumberValue())->Value());
+  unsigned char v = char(NanNew<Number>(args[1]->NumberValue())->Value());
   pinMode(obj->lw_, p, v);
-  return scope.Close(Boolean::New(true));
+  NanReturnValue(NanNew<Boolean>(true));
 }
 
-Handle<Value> Digispark::ServoWrite(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Digispark::ServoWrite) {
+  NanScope();
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
   if (obj->servo == false) {
     servo_init(obj->lw_);
     obj->servo = true;
   }
-  unsigned char angle = char(Number::New(args[0]->NumberValue())->Value());
+  unsigned char angle = char(NanNew<Number>(args[0]->NumberValue())->Value());
   servo_updateLocation(obj->lw_, angle, angle);
-  return scope.Close(Boolean::New(true));
+  NanReturnValue(NanNew<Boolean>(true));
 }
 
-Handle<Value> Digispark::PWMWrite(const Arguments& args) {
-  HandleScope scope;
+NAN_METHOD(Digispark::PWMWrite) {
+  NanScope();
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
   if (obj->pwm == false) {
     softPWM_state(obj->lw_, ENABLE);
     obj->pwm = true;
   }
-  unsigned char pin = char(Number::New(args[0]->NumberValue())->Value());
-  unsigned char val = char(Number::New(args[1]->NumberValue())->Value());
+  unsigned char pin = char(NanNew<Number>(args[0]->NumberValue())->Value());
+  unsigned char val = char(NanNew<Number>(args[1]->NumberValue())->Value());
   switch(pin) {
     case 0:
       obj->ch0 = val;
@@ -131,7 +135,7 @@ Handle<Value> Digispark::PWMWrite(const Arguments& args) {
     break;
   }
   softPWM_write(obj->lw_, obj->ch0, obj->ch1, obj->ch2);
-  return scope.Close(Boolean::New(true));
+  NanReturnValue(NanNew<Boolean>(true));
 }
 
 void InitAll(Handle<Object> exports) {
