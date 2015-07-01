@@ -11,6 +11,9 @@
       ],
       'libraries': [
         '-lusb'
+      ],
+      "include_dirs" : [
+          "<!(node -e \"require('nan')\")"
       ]
     },
   ],

@@ -29,13 +29,16 @@ describe("Digispark", function() {
   });
 
   describe("#connect", function() {
-    var mockSpark = {},
+    var mockSpark = {
+          digisparkSearch: stub()
+        },
         callback;
 
     beforeEach(function() {
       callback = spy();
       stub(digispark, "Digispark").returns(mockSpark);
       stub(spark, "proxyMethods");
+      mockSpark.digisparkSearch.returns(1);
       spark.connect(callback);
     });
 
@@ -124,8 +127,13 @@ describe("Digispark", function() {
     var mockSpark;
 
     beforeEach(function() {
-      mockSpark = { pwmWrite: spy() };
+      mockSpark = {
+        pwmWrite: spy(),
+        digisparkSearch: stub()
+      };
+
       stub(digispark, "Digispark").returns(mockSpark);
+      mockSpark.digisparkSearch.returns(1);
 
       spark.connect(spy());
       spark.pwmWrite("A", 1);
