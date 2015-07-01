@@ -1,6 +1,6 @@
 {
   "name": "cylon-digispark",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "description": "Cylon module for Digispark",
   "homepage": "http://cylonjs.com",
   "bugs": "https://github.com/hybridgroup/cylon-digispark/issues",
@@ -38,9 +38,9 @@
   },
 
   "dependencies": {
-    "cylon":      "1.0.0",
-    "cylon-gpio": "0.25.0",
-    "node-gyp":   "2.0.1",
-    "nan":        "1.8.4"
+    "cylon":      "~1.1.0",
+    "cylon-gpio": "~0.26.0",
+    "node-gyp":   "~2.0.1",
+    "nan":        "~1.8.4"
   }
 }
