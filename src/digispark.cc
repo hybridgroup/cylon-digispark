@@ -14,6 +14,7 @@ class Digispark : public node::ObjectWrap {
     ~Digispark();
     static NAN_METHOD(New);
     static NAN_METHOD(FirmwareVersion);
+    static NAN_METHOD(DigisparkSearch);
     static NAN_METHOD(DigitalWrite);
     static NAN_METHOD(DigitalRead);
     static NAN_METHOD(ServoWrite);
@@ -45,6 +46,7 @@ void Digispark::Init(Handle<Object> exports) {
 
   // Prototype
   tpl->PrototypeTemplate()->Set(NanNew("firmwareVersion"),NanNew<FunctionTemplate>(FirmwareVersion)->GetFunction());
+  tpl->PrototypeTemplate()->Set(NanNew("digisparkSearch"),NanNew<FunctionTemplate>(DigisparkSearch)->GetFunction());
   tpl->PrototypeTemplate()->Set(NanNew("pinMode"),NanNew<FunctionTemplate>(PinMode)->GetFunction());
   tpl->PrototypeTemplate()->Set(NanNew("digitalWrite"),NanNew<FunctionTemplate>(DigitalWrite)->GetFunction());
   tpl->PrototypeTemplate()->Set(NanNew("digitalRead"),NanNew<FunctionTemplate>(DigitalRead)->GetFunction());
@@ -71,6 +73,11 @@ NAN_METHOD(Digispark::FirmwareVersion) {
   NanScope();
   Digispark* obj = ObjectWrap::Unwrap<Digispark>(args.This());
   NanReturnValue(NanNew<Number>(readFirmwareVersion(obj->lw_)));
+}
+
+NAN_METHOD(Digispark::DigisparkSearch) {
+  NanScope();
+  NanReturnValue(NanNew<Number>(littlewire_search()));
 }
 
 NAN_METHOD(Digispark::DigitalWrite) {
