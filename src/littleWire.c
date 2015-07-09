@@ -1,6 +1,6 @@
 /*
   Cross platform computer interface library for Little Wire project
-  
+
   http://littlewire.cc
 
   Copyright (C) <2013> ihsan Kehribar <ihsan@kehribar.me>
@@ -26,9 +26,16 @@
 */
 
 /******************************************************************************
-* See the littleWire.h for the function descriptions/comments 
+* See the littleWire.h for the function descriptions/comments
 /*****************************************************************************/
 #include "littleWire.h"
+
+// external variables
+lwCollection lwResults[16];
+int lw_totalDevices;
+unsigned char rxBuffer[RX_BUFFER_SIZE]; /* This has to be unsigned for the data's sake */
+unsigned char ROM_NO[8];
+int lwStatus;
 
 unsigned char	crc8;
 int		LastDiscrepancy;
@@ -79,20 +86,22 @@ int littlewire_search()
 
       if((dev->descriptor.idVendor == VENDOR_ID) && (dev->descriptor.idProduct == PRODUCT_ID))
       {
-        udev = usb_open(dev);      
-        if (udev) 
-        {          
-          if (dev->descriptor.iSerialNumber) 
+        udev = usb_open(dev);
+        if (udev)
+        {
+          if (dev->descriptor.iSerialNumber)
           {
             ret = usb_get_string_simple(udev, dev->descriptor.iSerialNumber, string, sizeof(string));
             if (ret > 0)
             {
               lwResults[lw_totalDevices].serialNumber = atoi(string);
               lwResults[lw_totalDevices].lw_device = dev;
+              lw_totalDevices++;
+            } else {
+              printf("Connection error! Try creating a udev rule or running with sudo.\n");
             }
           }
           usb_close(udev);
-          lw_totalDevices++;        
         }
       }
     }
@@ -104,7 +113,7 @@ int littlewire_search()
 littleWire* littlewire_connect_byID(int desiredID)
 {
   littleWire  *tempHandle = NULL;
-  
+
   if(desiredID > (lw_totalDevices-1))
   {
     return tempHandle;
@@ -209,7 +218,7 @@ void analog_init(littleWire* lwHandle, unsigned char voltageRef)
 
 unsigned int analogRead(littleWire* lwHandle, unsigned char channel)
 {
-	lwStatus=usb_control_msg(lwHandle, 0xC0, 15, channel, 0, rxBuffer, 8, USB_TIMEOUT);	
+	lwStatus=usb_control_msg(lwHandle, 0xC0, 15, channel, 0, rxBuffer, 8, USB_TIMEOUT);
 
 	return ((rxBuffer[1] *256) + (rxBuffer[0]));
 }
@@ -303,16 +312,16 @@ void i2c_write(littleWire* lwHandle, unsigned char* sendBuffer, unsigned char le
 void i2c_read(littleWire* lwHandle, unsigned char* readBuffer, unsigned char length, unsigned char endWithStop)
 {
 	int i=0;
-	
+
 	if(endWithStop)
 		lwStatus=usb_control_msg(lwHandle, 0xC0, 46, (length<<8) + 1, 1, rxBuffer, 8, USB_TIMEOUT);
 	else
 		lwStatus=usb_control_msg(lwHandle, 0xC0, 46, (length<<8) + 0, 0, rxBuffer, 8, USB_TIMEOUT);
-	
+
 	delay(3);
 
   lwStatus=usb_control_msg(lwHandle, 0xC0, 40, 0, 0, rxBuffer, 8, USB_TIMEOUT);
-	
+
 	for(i=0;i<length;i++)
 		readBuffer[i]=rxBuffer[i];
 }
@@ -335,7 +344,7 @@ void onewire_writeByte(littleWire* lwHandle, unsigned char messageToSend)
 
 unsigned char onewire_readByte(littleWire* lwHandle)
 {
-	lwStatus=usb_control_msg(lwHandle, 0xC0, 43, 0, 0, rxBuffer, 8, USB_TIMEOUT); 
+	lwStatus=usb_control_msg(lwHandle, 0xC0, 43, 0, 0, rxBuffer, 8, USB_TIMEOUT);
 	delay(3);
 	lwStatus=usb_control_msg(lwHandle, 0xC0, 40, 0, 0, rxBuffer, 8, USB_TIMEOUT);
 	return rxBuffer[0];
@@ -345,7 +354,7 @@ unsigned char onewire_readBit(littleWire* lwHandle)
 {
 	lwStatus=usb_control_msg(lwHandle, 0xC0, 50, 0, 0, rxBuffer, 8, USB_TIMEOUT);
 	lwStatus=usb_control_msg(lwHandle, 0xC0, 40, 0, 0, rxBuffer, 8, USB_TIMEOUT);
-	return rxBuffer[0];	
+	return rxBuffer[0];
 }
 
 unsigned char onewire_resetPulse(littleWire* lwHandle)
@@ -353,7 +362,7 @@ unsigned char onewire_resetPulse(littleWire* lwHandle)
 	lwStatus=usb_control_msg(lwHandle, 0xC0, 41, 0, 0, rxBuffer, 8, USB_TIMEOUT);
 	delay(3);
 	lwStatus=usb_control_msg(lwHandle, 0xC0, 40, 0, 0, rxBuffer, 8, USB_TIMEOUT);
-	return rxBuffer[0];	
+	return rxBuffer[0];
 }
 
 void softPWM_state(littleWire* lwHandle,unsigned char state)
@@ -380,7 +389,7 @@ void ws2812_preload(littleWire* lwHandle, unsigned char r,unsigned char g,unsign
 {
 	lwStatus=usb_control_msg(lwHandle, 0xC0, 54, (g<<8) | 0x20, (b<<8) | r, rxBuffer, 8, USB_TIMEOUT);
 }
-	
+
 int customMessage(littleWire* lwHandle,unsigned char* receiveBuffer,unsigned char command,unsigned char d1,unsigned char d2, unsigned char d3, unsigned char d4)
 {
 	int i;
@@ -432,8 +441,8 @@ int onewire_nextAddress(littleWire* lwHandle)
          return 0;
       }
 
-      // issue the search command 
-      onewire_writeByte(lwHandle,0xF0);  
+      // issue the search command
+      onewire_writeByte(lwHandle,0xF0);
 
       // loop to do the search
       do
@@ -506,7 +515,7 @@ int onewire_nextAddress(littleWire* lwHandle)
          // check for last device
          if (LastDiscrepancy == 0)
             LastDeviceFlag = 1;
-         
+
          search_result = 1;
       }
    }
@@ -556,6 +565,6 @@ char *littleWire_errorName () {
                 case -12: return "Not supported"; break;
                 case -99: return "Other"; break;
                 default: return "unknown";
-        }               
+        }
         else return 0;
 }

@@ -30,7 +30,7 @@ Cylon.robot({
         if (index === 2) {
           index = 0;
           fade = -fade;
-        }else{
+        } else {
           brightness = (fade > 0) ? 0 : 255;
           index++;
         }

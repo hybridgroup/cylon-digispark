@@ -1,7 +1,6 @@
 {
   "name": "cylon-digispark",
-  "version": "0.11.0",
-  "main": "lib/cylon-digispark.js",
+  "version": "0.13.0",
   "description": "Cylon module for Digispark",
   "homepage": "http://cylonjs.com",
   "bugs": "https://github.com/hybridgroup/cylon-digispark/issues",
@@ -13,24 +12,35 @@
     "url": "https://github.com/hybridgroup/cylon-digispark"
   },
 
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
+
+  "keywords": [
+    "cylon",
+    "cylonjs",
+    "cylons",
+    "robot",
+    "robots",
+    "robotics",
+    "iot",
+    "hardware",
+    "gpio",
+    "i2c",
+    "digispark",
+    "digistump"
+  ],
 
   "devDependencies": {
-    "sinon-chai": "~2.4.0",
-    "chai":       "~1.7.2",
-    "mocha":      "~1.12.1",
-    "sinon":      "~1.7.3",
-    "jshint":     "~2.4.4"
-  },
-
-  "peerDependencies": {
-    "cylon":      ">= 0.22.0 < 1",
-    "cylon-gpio": ">= 0.22.0 < 1"
+    "sinon-chai": "2.8.0",
+    "chai":       "3.0.0",
+    "mocha":      "2.2.5",
+    "sinon":      "1.15.4",
+    "eslint":     "0.24.0"
   },
 
   "dependencies": {
-    "cylon":      "~0.22.0",
-    "cylon-gpio": "~0.22.0",
-    "node-gyp":   "~0.12.2"
+    "cylon":      "~1.1.0",
+    "cylon-gpio": "~0.26.0",
+    "node-gyp":   "~2.0.1",
+    "nan":        "~1.8.4"
   }
 }

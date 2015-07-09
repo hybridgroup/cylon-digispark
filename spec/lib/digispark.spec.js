@@ -1,9 +1,9 @@
 /* jshint expr:true */
 "use strict";
 
-var Digispark = source("digispark");
+var Digispark = lib("digispark");
 
-var digispark = source("../build/Release/digispark.node");
+var digispark = lib("../build/Release/digispark.node");
 
 describe("Digispark", function() {
   var spark = new Digispark({
@@ -29,13 +29,16 @@ describe("Digispark", function() {
   });
 
   describe("#connect", function() {
-    var mockSpark = {},
+    var mockSpark = {
+          digisparkSearch: stub()
+        },
         callback;
 
     beforeEach(function() {
       callback = spy();
       stub(digispark, "Digispark").returns(mockSpark);
       stub(spark, "proxyMethods");
+      mockSpark.digisparkSearch.returns(1);
       spark.connect(callback);
     });
 
@@ -61,25 +64,29 @@ describe("Digispark", function() {
   });
 
   describe("#digitalWrite", function() {
-    var digispark;
+    var mock;
 
     beforeEach(function() {
-      digispark = { pinMode: spy(), digitalWrite: spy() };
-      spark.digispark = digispark;
+      mock = { pinMode: spy(), digitalWrite: spy() };
+      spark.digispark = mock;
       spark.digitalWrite("A", 1);
     });
 
     it("sets the pin mode to 0", function() {
-      expect(digispark.pinMode).to.be.calledWith("A", 0);
+      expect(mock.pinMode).to.be.calledWith("A", 0);
     });
 
     it("writes the value to the pin", function() {
-      expect(digispark.digitalWrite).to.be.calledWith("A", 1);
+      expect(mock.digitalWrite).to.be.calledWith("A", 1);
     });
   });
 
   describe("#digitalRead", function() {
     var digispark, callback, clock;
+
+    beforeEach(function() {
+      clock = sinon.useFakeTimers();
+    });
 
     afterEach(function() {
       clock.restore();
@@ -94,12 +101,13 @@ describe("Digispark", function() {
       callback = spy();
 
       spark.digispark = digispark;
+
       spark.digitalRead("A", callback);
       clock.tick(50);
     });
 
     it("sets the pin mode to 1", function() {
-      expect(digispark.pinMode).to.be.calledWith("A", 1);
+      expect(mock.pinMode).to.be.calledWith("A", 1);
     });
 
     it("reads the value from the pin", function() {
@@ -114,21 +122,22 @@ describe("Digispark", function() {
 
     it("triggers the callback", function() {
       expect(callback).to.be.calledWith(null, 1);
+      clock.tick(2050);
+      expect(mock.digitalRead).to.be.calledWith("A", callback);
     });
   });
 
   describe("#servoWrite", function() {
-    var digispark, callback;
+    var mock;
 
     beforeEach(function() {
-      digispark = { servoWrite: spy() };
-      callback = spy();
-      spark.digispark = digispark;
+      mock = { servoWrite: spy() };
+      spark.digispark = mock;
       spark.servoWrite("A", 1);
     });
 
     it("writes the value to the pin", function() {
-      expect(digispark.servoWrite).to.be.calledWith(180);
+      expect(mock.servoWrite).to.be.calledWith(180);
     });
   });
 
@@ -136,8 +145,13 @@ describe("Digispark", function() {
     var mockSpark;
 
     beforeEach(function() {
-      mockSpark = { pwmWrite: spy() };
+      mockSpark = {
+        pwmWrite: spy(),
+        digisparkSearch: stub()
+      };
+
       stub(digispark, "Digispark").returns(mockSpark);
+      mockSpark.digisparkSearch.returns(1);
 
       spark.connect(spy());
       spark.pwmWrite("A", 1);
