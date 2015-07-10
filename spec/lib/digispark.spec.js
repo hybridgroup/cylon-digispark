@@ -90,13 +90,20 @@ describe("Digispark", function() {
 
     afterEach(function() {
       clock.restore();
+      spark.respond.restore();
     });
 
     beforeEach(function() {
-      mock = { pinMode: spy(), digitalRead: spy() };
+      clock = sinon.useFakeTimers();
+      mock = { pinMode: spy(), digitalRead: stub() };
+      mock.digitalRead.yields(null, 1);
+      spy(spark, "respond");
       callback = spy();
+
       spark.digispark = mock;
+
       spark.digitalRead("A", callback);
+      clock.tick(50);
     });
 
     it("sets the pin mode to 1", function() {
@@ -104,8 +111,19 @@ describe("Digispark", function() {
     });
 
     it("reads the value from the pin", function() {
+      expect(mock.digitalRead).to.be.calledWith("A");
+    });
+
+    it("calls #respond method", function() {
+      expect(spark.respond)
+        .to.be
+        .calledWith("digitalRead", callback, null, 1, "A");
+    });
+
+    it("triggers the callback", function() {
+      expect(callback).to.be.calledWith(null, 1);
       clock.tick(2050);
-      expect(mock.digitalRead).to.be.calledWith("A", callback);
+      expect(mock.digitalRead).to.be.calledWith("A");
     });
   });
 
