@@ -3,7 +3,12 @@
 
 var Digispark = lib("digispark");
 
-var digispark = lib("../build/Release/digispark.node");
+
+var binary = require("node-pre-gyp");
+var path = require("path");
+var packagePath = path.resolve(path.join(__dirname, "../../package.json"));
+var bindingPath = binary.find(packagePath);
+var digispark = require(bindingPath);
 
 describe("Digispark", function() {
   var spark = new Digispark({

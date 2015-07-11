@@ -1,6 +1,7 @@
 {
   "name": "cylon-digispark",
   "version": "0.13.0",
+  "main": "./index",
   "description": "Cylon module for Digispark",
   "homepage": "http://cylonjs.com",
   "bugs": "https://github.com/hybridgroup/cylon-digispark/issues",
@@ -29,18 +30,34 @@
     "digistump"
   ],
 
+  "bundleDependencies": ["node-pre-gyp"],
+
   "devDependencies": {
     "sinon-chai": "2.8.0",
     "chai":       "3.0.0",
     "mocha":      "2.2.5",
     "sinon":      "1.15.4",
-    "eslint":     "0.24.0"
+    "eslint":     "0.24.0",
+    "aws-sdk":    "~2.1.38"
   },
 
   "dependencies": {
     "cylon":      "~1.1.0",
     "cylon-gpio": "~0.26.0",
     "node-gyp":   "~2.0.1",
-    "nan":        "~1.8.4"
+    "nan":        "~1.8.4",
+    "node-pre-gyp": "~0.6.7"
+  },
+
+  "scripts": {
+    "install": "node-pre-gyp install --fallback-to-build"
+  },
+
+  "binary": {
+    "module_name": "digispark",
+    "module_path": "./build/{module_name}/v{version}/{configuration}/{node_abi}-{platform}-{arch}/",
+    "remote_path": "./{module_name}/v{version}/{configuration}/",
+    "package_name": "{node_abi}-{platform}-{arch}.tar.gz",
+    "host": "https://node-digispark.s3.amazonaws.com"
   }
 }
