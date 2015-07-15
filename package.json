@@ -1,6 +1,6 @@
 {
   "name": "cylon-digispark",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "main": "./index",
   "description": "Cylon module for Digispark",
   "homepage": "http://cylonjs.com",

@@ -1,15 +1,22 @@
-language: node_js
+language: cpp
 
-node_js:
-  - '0.10'
-  - '0.12'
+os:
+- linux
+- osx
 
 env:
+  matrix:
+    - NODE_VERSION="0.10"
+    - NODE_VERSION="0.12"
   global:
     - secure: "UcXhxzT+nY8Kyme5AV1cIiMbGfeAuZ+j72qevQqHIZ5KWkcO4YMSn1SzSUpGUsgZpNVzCZ5hIyUYxqWtDSlvTRy9eKRp9nceAkhLcHuDduGlmvmxVp/thlhoBux8F4CRHRJiXKso0XZy6OwIDy1aG5lLsmmNcRkjb8CmUqvbFrc="
     - secure: "hkVDKMOP9dmh7aHHLqdBAL43CLWUEpmAL1N6kHG5X3HfY1+IKVzz5MkwQIZotrqaa7f7x7o9SiGCg7xR9RCaperb/ktKjrVSDoDuZq9nwJiU/a98s74bhtkA2DEoubfKvD+sCjk2d7cDAUd8kwqBpwIvOxK/Tjj19eC++7WPokk=" 
 
 before_install:
+  - rm -rf ~/.nvm/ && git clone --depth 1 https://github.com/creationix/nvm.git ~/.nvm
+  - source ~/.nvm/nvm.sh
+  - nvm install $NODE_VERSION
+  - nvm use $NODE_VERSION
   - "mkdir -p ~/.npm"
   # get commit message
   - COMMIT_MESSAGE=$(git show -s --format=%B $TRAVIS_COMMIT | tr -d '\n')
@@ -25,12 +32,13 @@ before_install:
   - if [[ $TRAVIS_BRANCH == `git describe --tags --always HEAD` ]]; then PUBLISH_BINARY=true; fi;
   # or if we put [publish binary] in the commit message
   - if test "${COMMIT_MESSAGE#*'[publish binary]'}" != "$COMMIT_MESSAGE"; then PUBLISH_BINARY=true; fi;
-  - platform=$(uname -s | sed "y/ABCDEFGHIJKLMNOPQRSTUVWXYZ/abcdefghijklmnopqrstuvwxyz/")
-  # Fix a problem with apt-get failing later, see http://docs.travis-ci.com/user/installing-dependencies/#Installing-Ubuntu-packages
-  - sudo apt-get update -qq
+  - platform=$(uname -s)
+  # If Linux, fix a problem with apt-get failing later, see http://docs.travis-ci.com/user/installing-dependencies/#Installing-Ubuntu-packages
+  - if [[ $platform == 'Linux' ]]; then sudo apt-get update -qq; fi;
 
 install:
-  - sudo apt-get -y install libusb-dev
+  - if [[ $platform == 'Darwin' ]]; then brew install libusb && brew install libusb-compat; fi;
+  - if [[ $platform == 'Linux' ]]; then sudo apt-get -y install libusb-dev; fi;
   - npm install --build-from-source
   - npm install git://github.com/hybridgroup/cylon.git
   - npm install -g istanbul codeclimate-test-reporter
@@ -38,37 +46,37 @@ install:
 script:
   - make ci
   - echo "Publishing native platform Binary Package? ->" $PUBLISH_BINARY
-    # if publishing pre-compiled binaries, do it
+  # if publishing pre-compiled binaries, do it
   - if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
   # cleanup
   - node-pre-gyp clean
   - node-gyp clean
-    # if publishing, test installing from remote
+  # if publishing, test installing from remote
   - INSTALL_RESULT=0
   - if [[ $PUBLISH_BINARY == true ]]; then INSTALL_RESULT=$(npm install --fallback-to-build=false > /dev/null)$? || true; fi;
-    # if install returned non zero (errored) then we first unpublish and then call false so travis will bail at this line
+  # if install returned non zero (errored) then we first unpublish and then call false so travis will bail at this line
   - if [[ $INSTALL_RESULT != 0 ]]; then echo "returned $INSTALL_RESULT";node-pre-gyp unpublish;false; fi
-    # If success then we arrive here so lets clean up
+  # If success then we arrive here so lets clean up
   - node-pre-gyp clean
-  # so here we use the 32 bit ones to also test 32 bit builds
-  - NVER=`node -v`
-  - wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-x86.tar.gz
-  - tar xf node-${NVER}-${platform}-x86.tar.gz
-    # enable 32 bit node
-  - export PATH=$(pwd)/node-${NVER}-${platform}-x86/bin:$PATH
+  # We install 32 bit versions and libs for x86 pre compiled binaries
+  - if [[ $platform == 'Linux' ]]; NVER=`node -v`; fi;
+  - if [[ $platform == 'Linux' ]]; wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-x86.tar.gz; fi;
+  - if [[ $platform == 'Linux' ]]; tar xf node-${NVER}-${platform}-x86.tar.gz; fi;
+  # enable 32 bit node
+  - if [[ $platform == 'Linux' ]]; export PATH=$(pwd)/node-${NVER}-${platform}-x86/bin:$PATH; fi;
   # install 32 bit compiler toolchain and X11
-  - if [[ "$platform" == 'linux' ]]; then sudo apt-get -y install gcc-multilib g++-multilib; fi
-    # Install libusb-dev 32bit
-  - if [[ "$platform" == 'linux' ]]; then CC=gcc-4.6 CXX=g++-4.6 sudo apt-get -y install libusb-dev:i386; fi
+  - if [[ $platform == 'Linux' ]];; then sudo apt-get -y install gcc-multilib g++-multilib; fi
+  # Install libusb-dev 32bit
+  - if [[ $platform == 'Linux' ]]; then CC=gcc-4.6 CXX=g++-4.6 sudo apt-get -y install libusb-dev:i386; fi
   # test source compile in 32 bit mode with internal libsqlite3
-  - if [[ "$platform" == 'linux' ]]; then CC=gcc-4.6 CXX=g++-4.6 npm install --build-from-source; else npm install --build-from-source; fi
+  - if [[ $platform == 'Linux' ]]; then CC=gcc-4.6 CXX=g++-4.6 npm install --build-from-source; fi;
   # test source compile in 32 bit mode with internal libsqlite3
-  - make test
+  - if [[ $platform == 'Linux' ]]; then make test; fi;
   # publish 32 bit build
   - echo "Publishing x86 32bit Binary Package? ->" $PUBLISH_BINARY
-  - if [[ $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
+  - if [[ $platform == 'Linux' && $PUBLISH_BINARY == true ]]; then node-pre-gyp package publish; fi;
 
 after_success:
-# if success then query and display all published binaries
-- node-pre-gyp info
-- CODECLIMATE_REPO_TOKEN=9d391fbc1ab0b8c4812831989c359d9c24d19947865aa82b1a9dc2303d9681e9 codeclimate-test-reporter < coverage/lcov.info
+  # if success then query and display all published binaries
+  - node-pre-gyp info
+  - CODECLIMATE_REPO_TOKEN=9d391fbc1ab0b8c4812831989c359d9c24d19947865aa82b1a9dc2303d9681e9 codeclimate-test-reporter < coverage/lcov.info
