@@ -40,6 +40,7 @@ install:
   - cmd: nodist update
   - cmd: nodist %nodejs_version%
   - cmd: npm install -g node-gyp
+  - cmd: choco install zadig
 
 # to run your custom scripts instead of automatic MSBuild
 build_script:
