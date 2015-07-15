@@ -59,13 +59,13 @@ script:
   # If success then we arrive here so lets clean up
   - node-pre-gyp clean
   # We install 32 bit versions and libs for x86 pre compiled binaries
-  - if [[ $platform == 'Linux' ]]; NVER=`node -v`; fi;
-  - if [[ $platform == 'Linux' ]]; wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-x86.tar.gz; fi;
-  - if [[ $platform == 'Linux' ]]; tar xf node-${NVER}-${platform}-x86.tar.gz; fi;
+  - if [[ $platform == 'Linux' ]]; then NVER=`node -v`; fi;
+  - if [[ $platform == 'Linux' ]]; then wget http://nodejs.org/dist/${NVER}/node-${NVER}-${platform}-x86.tar.gz; fi;
+  - if [[ $platform == 'Linux' ]]; then tar xf node-${NVER}-${platform}-x86.tar.gz; fi;
   # enable 32 bit node
-  - if [[ $platform == 'Linux' ]]; export PATH=$(pwd)/node-${NVER}-${platform}-x86/bin:$PATH; fi;
+  - if [[ $platform == 'Linux' ]]; then export PATH=$(pwd)/node-${NVER}-${platform}-x86/bin:$PATH; fi;
   # install 32 bit compiler toolchain and X11
-  - if [[ $platform == 'Linux' ]];; then sudo apt-get -y install gcc-multilib g++-multilib; fi
+  - if [[ $platform == 'Linux' ]]; then sudo apt-get -y install gcc-multilib g++-multilib; fi
   # Install libusb-dev 32bit
   - if [[ $platform == 'Linux' ]]; then CC=gcc-4.6 CXX=g++-4.6 sudo apt-get -y install libusb-dev:i386; fi
   # test source compile in 32 bit mode with internal libsqlite3
